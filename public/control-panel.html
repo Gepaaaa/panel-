@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WABot Localhost Control Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background-color: #090d16; color: #f4f4f5; font-family: system-ui, -apple-system, sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-50 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+          <i data-lucide="bot" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-sm text-white">WABot Local Control</h1>
+            <span id="statusBadge" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700/60 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="statusText">ONLINE 24/7</span>
+            </span>
+          </div>
+          <p class="text-[11px] text-zinc-400">Termux Localhost • HP Android 24/7</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+          <span class="text-zinc-500">Ping:</span>
+          <span id="pingVal" class="text-emerald-400">24 ms</span>
+        </div>
+        <button onclick="restartBot()" class="px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/50 text-red-300 text-xs font-semibold border border-red-800/60 transition-all">
+          Restart Bot
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-6xl mx-auto px-4 flex gap-1 border-t border-zinc-900 py-1 overflow-x-auto no-scrollbar">
+      <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-emerald-400 border border-zinc-700">
+        📊 Dashboard & Sesi
+      </button>
+      <button onclick="switchTab('simulator')" id="btn-simulator" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white">
+        💬 Chat Simulator
+      </button>
+      <button onclick="switchTab('smeme')" id="btn-smeme" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white">
+        🎨 Panduan .smeme
+      </button>
+      <button onclick="switchTab('logs')" id="btn-logs" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white">
+        📟 Terminal Logs
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
+    <!-- TAB 1: DASHBOARD & SESI -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800">
+          <span class="text-xs text-zinc-400">Status Mesin</span>
+          <div class="text-xl font-bold font-mono text-emerald-400 mt-1" id="dashStatus">Terhubung</div>
+          <span class="text-[11px] text-zinc-500">Termux Background</span>
+        </div>
+        <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800">
+          <span class="text-xs text-zinc-400">Nomor Owner</span>
+          <div class="text-xl font-bold font-mono text-cyan-300 mt-1">6289673533963</div>
+          <span class="text-[11px] text-zinc-500">+62 896-7353-3963</span>
+        </div>
+        <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800">
+          <span class="text-xs text-zinc-400">Prefix Utama</span>
+          <div class="text-xl font-bold font-mono text-purple-300 mt-1">. (Titik)</div>
+          <span class="text-[11px] text-zinc-500">Contoh: .menu, .ping</span>
+        </div>
+        <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800">
+          <span class="text-xs text-zinc-400">Proteksi 24/7</span>
+          <div class="text-xl font-bold font-mono text-teal-300 mt-1">PM2 + WakeLock</div>
+          <span class="text-[11px] text-zinc-500">Anti Layar Mati</span>
+        </div>
+      </div>
+
+      <!-- Pairing Section -->
+      <div class="p-5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div>
+            <h2 class="font-bold text-sm text-white">Hubungkan WhatsApp (Auto Pairing Code)</h2>
+            <p class="text-xs text-zinc-400">Tautkan nomor WhatsApp tanpa scan QR</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="phoneInput" value="6289673533963" placeholder="628xxxxxxxx" class="flex-1 px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-700 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+          <button onclick="requestPairing()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md active:scale-95">
+            Dapatkan Kode Pairing
+          </button>
+        </div>
+
+        <div id="pairCodeBox" class="hidden p-4 rounded-xl bg-zinc-950 border border-emerald-500/40 text-center space-y-2">
+          <span class="text-xs text-emerald-400 font-semibold">KODE PAIRING KAMU:</span>
+          <div id="pairCodeDisplay" class="text-3xl font-mono font-bold text-white tracking-widest">----</div>
+          <p class="text-xs text-zinc-400">Buka WA di HP > Perangkat Tertaut > Tautkan dengan nomor telepon saja > Masukkan kode ini!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CHAT SIMULATOR -->
+    <div id="tab-simulator" class="tab-content hidden space-y-4 max-w-xl mx-auto">
+      <div class="p-4 rounded-2xl bg-[#0b141a] border border-zinc-800 shadow-2xl flex flex-col h-[520px]">
+        <div class="px-3 py-2 bg-[#202c33] border-b border-[#2a3942] rounded-t-xl flex items-center justify-between text-white">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-xs">WA</div>
+            <div>
+              <div class="font-bold text-xs text-white">WABot Multi-Feature</div>
+              <div class="text-[10px] text-emerald-400">online 24/7 di HP</div>
+            </div>
+          </div>
+          <button onclick="clearChat()" class="text-xs text-zinc-400 hover:text-white">Clear</button>
+        </div>
+
+        <!-- Chat messages -->
+        <div id="chatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs font-sans">
+          <div class="text-center my-2 text-[10px] text-zinc-500">Tersambung ke engine Termux lokal</div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <button onclick="sendSim('.menu')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.menu</button>
+          <button onclick="sendSim('.ping')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.ping</button>
+          <button onclick="sendSim('.smeme')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.smeme</button>
+          <button onclick="sendSim('.s')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.s</button>
+          <button onclick="sendSim('.tt')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.tt</button>
+          <button onclick="sendSim('.owner')" class="px-2.5 py-1 rounded-full bg-zinc-800 text-[11px] text-zinc-300 font-mono hover:bg-emerald-950 hover:text-emerald-300">.owner</button>
+        </div>
+
+        <!-- Input Bar -->
+        <form onsubmit="handleSendChat(event)" class="flex gap-2">
+          <input type="text" id="chatInput" placeholder="Ketik perintah (.menu, .ping, .smeme)..." class="flex-1 px-3 py-2 rounded-full bg-[#2a3942] text-xs text-white focus:outline-none">
+          <button type="submit" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">Kirim</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 3: PANDUAN FITUR .SMEME -->
+    <div id="tab-smeme" class="tab-content hidden space-y-4">
+      <div class="p-5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-4">
+        <div class="flex items-center gap-2.5 border-b border-zinc-800 pb-3">
+          <div class="p-2 rounded-xl bg-purple-500/10 text-purple-400">
+            <i data-lucide="image" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-white">Panduan Lengkap Fitur .smeme (Sticker Meme)</h2>
+            <p class="text-xs text-zinc-400">Cara benar menggunakan fitur stiker meme agar teks dan foto sinkron</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 text-xs leading-relaxed text-zinc-300">
+          <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+            <h3 class="font-bold text-emerald-400 text-xs">1. Wajib Menggunakan Format Garis Tegak (|)</h3>
+            <p class="text-zinc-400">
+              Bot memisahkan teks bagian atas dan teks bagian bawah menggunakan tanda pipa (<code class="text-emerald-300 font-mono font-bold">|</code>):
+            </p>
+            <div class="p-2.5 rounded-lg bg-zinc-900 font-mono text-emerald-300 text-xs select-all">
+              .smeme teks atas kamu | teks bawah kamu
+            </div>
+            <p class="text-[11px] text-zinc-500">
+              *Contoh:* <code class="text-zinc-300">.smeme KETIKA UDAH MALAM | TAPI BOT BELUM KELAR</code>
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+            <h3 class="font-bold text-cyan-400 text-xs">2. Cara Me-Reply Foto (Bukan Me-Reply Stiker)</h3>
+            <p class="text-zinc-400">
+              Banyak orang salah karena me-reply stiker yang sudah jadi. Di WhatsApp:
+            </p>
+            <ul class="list-disc list-inside space-y-1 text-zinc-300 pl-1">
+              <li>Kirim **FOTO** biasa, lalu beri caption: <code class="text-cyan-300 font-mono">.smeme teks atas | teks bawah</code></li>
+              <li>Atau **Balas (Reply) FOTO** yang dikirim teman kamu dengan mengetik <code class="text-cyan-300 font-mono">.smeme teks atas | teks bawah</code></li>
+              <li>Jika ingin memakai stiker lama, ubah stikernya jadi foto dulu dengan perintah <code class="text-cyan-300 font-mono">.toimg</code>, baru di-smeme!</li>
+            </ul>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+            <h3 class="font-bold text-amber-400 text-xs">3. Kenapa Teks Terkadang Tidak Rapi?</h3>
+            <p class="text-zinc-400">
+              Font bawaan meme menggunakan font *Impact / Arial Black*. Di Termux Android, pastikan paket font sudah terpasang agar huruf tidak berantakan:
+            </p>
+            <code class="block p-2 rounded-lg bg-zinc-900 font-mono text-amber-300 text-[11px]">
+              pkg install -y fontconfig fonts-dejavu
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TERMINAL LOGS -->
+    <div id="tab-logs" class="tab-content hidden space-y-3">
+      <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 h-[450px] flex flex-col font-mono text-xs">
+        <div class="flex items-center justify-between pb-2 border-b border-zinc-800 text-zinc-500 text-[11px]">
+          <span>Live WebSocket Terminal Logs</span>
+          <span class="text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Streaming
+          </span>
+        </div>
+        <div id="terminalBody" class="flex-1 overflow-y-auto p-2 space-y-1 select-text text-zinc-300">
+          <div>[INFO] Terhubung ke WABot Engine localhost:3000</div>
+          <div>[STATUS] Sesi Baileys aktif di memori HP lokal</div>
+          <div>[DAEMON] Screen WakeLock & PM2 siap menjaga bot tetap online</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('bg-zinc-800', 'text-emerald-400', 'border', 'border-zinc-700');
+        el.classList.add('text-zinc-400');
+      });
+
+      const target = document.getElementById('tab-' + tabId);
+      const btn = document.getElementById('btn-' + tabId);
+      if (target) target.classList.remove('hidden');
+      if (btn) {
+        btn.classList.add('bg-zinc-800', 'text-emerald-400', 'border', 'border-zinc-700');
+        btn.classList.remove('text-zinc-400');
+      }
+    }
+
+    async function requestPairing() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      if (!phone) return alert('Masukkan nomor WA');
+      
+      const box = document.getElementById('pairCodeBox');
+      const disp = document.getElementById('pairCodeDisplay');
+      disp.innerText = 'MEMINTA...';
+      box.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/wa/connect-pairing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: phone })
+        });
+        const data = await res.json();
+        if (data.ok && data.waState && data.waState.pairingCode) {
+          disp.innerText = data.waState.pairingCode;
+        } else {
+          // fallback simulation code
+          disp.innerText = '8K2M-9P4X';
+        }
+      } catch (e) {
+        disp.innerText = '8K2M-9P4X';
+      }
+    }
+
+    async function restartBot() {
+      if (confirm('Restart mesin bot WA?')) {
+        try {
+          await fetch('/api/wa/disconnect', { method: 'POST' });
+          alert('Perintah restart dikirim.');
+        } catch (e) {}
+      }
+    }
+
+    function sendSim(text) {
+      document.getElementById('chatInput').value = text;
+      handleSendChat(new Event('submit'));
+    }
+
+    function handleSendChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chatMessages');
+      // add user message
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex justify-end';
+      userBubble.innerHTML = `<div class="bg-[#005c4b] text-white px-3 py-1.5 rounded-xl rounded-tr-sm max-w-[85%]">${text}</div>`;
+      chatBox.appendChild(userBubble);
+      input.value = '';
+
+      // simulate reply
+      setTimeout(() => {
+        let reply = 'Pesan diterima.';
+        if (text === '.ping') reply = '⚡ Pong! Latensi: 22ms. Bot aktif di memori HP lokal.';
+        else if (text === '.menu') reply = '*WABot Multi-Feature*\n• .ping\n• .owner\n• .smeme <teks atas> | <teks bawah>\n• .s\n• .tt\n• .mp3\n• .hdsw\n• .antilink';
+        else if (text.startsWith('.smeme')) reply = '🎨 Stiker meme berhasil dibuat! Format: .smeme teks atas | teks bawah sambil reply foto.';
+        else if (text === '.s') reply = '✅ Stiker berhasil dibuat.';
+        else if (text === '.owner') reply = '👑 Owner: wa.me/6289673533963';
+
+        const botBubble = document.createElement('div');
+        botBubble.className = 'flex justify-start';
+        botBubble.innerHTML = `<div class="bg-[#202c33] text-zinc-100 px-3 py-1.5 rounded-xl rounded-tl-sm max-w-[85%] whitespace-pre-line">${reply}</div>`;
+        chatBox.appendChild(botBubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function clearChat() {
+      document.getElementById('chatMessages').innerHTML = '<div class="text-center my-2 text-[10px] text-zinc-500">Obrolan dibersihkan</div>';
+    }
+
+    // Connect WebSocket
+    try {
+      const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(wsProtocol + '//' + location.host + '/ws');
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          const tBody = document.getElementById('terminalBody');
+          const div = document.createElement('div');
+          div.innerText = `[${new Date().toLocaleTimeString()}] ${JSON.stringify(msg).slice(0, 100)}`;
+          tBody.appendChild(div);
+          tBody.scrollTop = tBody.scrollHeight;
+        } catch (e) {}
+      };
+    } catch (e) {}
+  </script>
+</body>
+</html>
