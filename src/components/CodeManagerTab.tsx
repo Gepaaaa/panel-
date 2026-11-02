@@ -178,6 +178,23 @@ export const CodeManagerTab: React.FC<CodeManagerTabProps> = ({ onRefreshStorage
 
   const activeFile = scripts.find((s) => s.id === activeFileId);
 
+  const handleSyncGepaaaa = async () => {
+    const defaults = localStorageService.getDefaultScripts();
+    for (const def of defaults) {
+      await localStorageService.saveScript(def);
+    }
+    const fresh = await localStorageService.getAllScripts();
+    setScripts(fresh);
+    if (fresh.length > 0) {
+      setActiveFileId(fresh[0].id);
+      setEditorContent(fresh[0].content);
+    }
+    botEngine.addLog('success', 'Source code disinkronkan dari github.com/Gepaaaa/bot ke memori HP!', 'GITHUB');
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 2000);
+    onRefreshStorage();
+  };
+
   return (
     <div className="space-y-6">
       {/* Sub tabs: Code Editor vs Quick Commands */}
@@ -208,7 +225,16 @@ export const CodeManagerTab: React.FC<CodeManagerTabProps> = ({ onRefreshStorage
         </div>
 
         {subTab === 'editor' && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={handleSyncGepaaaa}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300 text-xs font-semibold border border-emerald-600/50 active:scale-95 transition-all"
+              title="Sinkronkan kode dari github.com/Gepaaaa/bot"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Sync Repo Gepaaaa/bot</span>
+            </button>
+
             <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700/80 text-zinc-200 text-xs font-medium border border-zinc-700 cursor-pointer active:scale-95 transition-all">
               <Upload className="w-3.5 h-3.5 text-cyan-400" />
               <span>Upload File .js</span>

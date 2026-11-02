@@ -48,12 +48,14 @@ export const SimulatorTab: React.FC<SimulatorTabProps> = ({
   };
 
   const quickCommands = [
-    '!ping',
-    '!menu',
-    '!runtime',
-    '!status',
-    '!owner',
-    '!quote',
+    '.menu',
+    '.ping',
+    '.s',
+    '.tt',
+    '.mp3',
+    '.hdsw',
+    '.antilink',
+    '.owner',
   ];
 
   return (

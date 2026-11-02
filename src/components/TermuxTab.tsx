@@ -66,6 +66,92 @@ export const TermuxTab: React.FC<TermuxTabProps> = ({ session }) => {
         </button>
       </div>
 
+      {/* 1-SHOT AUTO-INSTALLER HERO BOX */}
+      <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/60 via-zinc-900 to-zinc-900 border-2 border-emerald-500/50 shadow-xl space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-sm">⚡</span>
+            <div>
+              <h3 className="text-sm font-bold text-white">
+                1-Kali Jalan Langsung Beres (Setelah Reinstall Termux)
+              </h3>
+              <p className="text-xs text-zinc-400">
+                Otomatis: WakeLock ON + Node.js + Baileys + PM2 + Auto Reconnect 24/7
+              </p>
+            </div>
+          </div>
+          <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold border border-emerald-500/40">
+            PASTI JALAN 100%
+          </span>
+        </div>
+
+        <p className="text-xs text-zinc-300 leading-relaxed">
+          Setelah Termux kamu di-reinstall atau di-clear data, cukup salin baris perintah ini lalu tekan <strong className="text-white">Enter</strong>. Bot akan menginstal seluruh modul tanpa error <code className="text-red-300 font-mono">MODULE_NOT_FOUND</code> dan langsung menampilkan kode pairing / status bot:
+        </p>
+
+        <div className="relative">
+          <pre className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono text-emerald-300 overflow-x-auto whitespace-pre-wrap break-all select-all leading-relaxed">
+            curl -sL https://raw.githubusercontent.com/Gepaaaa/bot/main/termux.sh | bash
+          </pre>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText("curl -sL https://raw.githubusercontent.com/Gepaaaa/bot/main/termux.sh | bash");
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-700/20 active:scale-95 transition-all"
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Perintah 1-Baris Disalin!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                <span>Salin Perintah 1-Kali Jalan</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Troubleshooting NDK / libc++ Error Box */}
+      <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-600/40 space-y-2.5">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+            <h4 className="text-xs font-bold text-amber-300">
+              Mengatasi Error: <code className="font-mono text-zinc-200 bg-zinc-950 px-1.5 py-0.5 rounded text-[11px]">CANNOT LINK EXECUTABLE "node"</code> &amp; <code className="font-mono text-zinc-200 bg-zinc-950 px-1.5 py-0.5 rounded text-[11px]">No command pm2 found</code>
+            </h4>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-900/60 text-amber-200 border border-amber-700/60 font-mono">
+            Solusi Termux HP
+          </span>
+        </div>
+        <p className="text-[11px] text-zinc-300 leading-relaxed">
+          Penyebab: Pustaka C++ (<code className="text-amber-300 font-mono">libc++</code>) di Termux kamu belum sinkron dengan versi Node.js yang baru diunduh. Salin perintah perbaikan di bawah ini dan tempel di Termux:
+        </p>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <code className="flex-1 p-2.5 rounded-xl bg-zinc-950 text-xs font-mono text-emerald-300 border border-zinc-800 select-all overflow-x-auto whitespace-pre-wrap">
+            pkg update -y && pkg install -y libc++ && pkg upgrade -y && pkg install -y nodejs-lts git curl && npm install -g pm2
+          </code>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText("pkg update -y && pkg install -y libc++ && pkg upgrade -y && pkg install -y nodejs-lts git curl && npm install -g pm2");
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold whitespace-nowrap active:scale-95 transition-all shadow-md shadow-amber-800/20"
+          >
+            Salin Perintah Fix
+          </button>
+        </div>
+      </div>
+
       {/* Guide Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-2">

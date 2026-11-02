@@ -17,9 +17,11 @@ import { CodeManagerTab } from './components/CodeManagerTab';
 import { TerminalTab } from './components/TerminalTab';
 import { SimulatorTab } from './components/SimulatorTab';
 import { TermuxTab } from './components/TermuxTab';
+import { GuideModal } from './components/GuideModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [status, setStatus] = useState<ConnectionStatus>(botEngine.getStatus());
   const [session, setSession] = useState<SessionData | null>(botEngine.getSession());
   const [antiSleep, setAntiSleep] = useState<AntiSleepState>(keepAliveDaemon.getState());
@@ -204,6 +206,14 @@ export default function App() {
         antiSleep={antiSleep}
         storage={storage}
         onToggleBot={handleToggleBot}
+        onOpenGuide={() => setIsGuideOpen(true)}
+      />
+
+      {/* Interactive Guide Modal */}
+      <GuideModal
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+        onNavigateTab={(tab) => setActiveTab(tab)}
       />
 
       {/* Main Tab Content Area */}

@@ -9,7 +9,8 @@ import {
   Battery, 
   HardDrive,
   Volume2,
-  Lock
+  Lock,
+  BookOpen
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -19,6 +20,7 @@ interface HeaderProps {
   antiSleep: AntiSleepState;
   storage: LocalStorageMetrics;
   onToggleBot: () => void;
+  onOpenGuide: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   antiSleep,
   storage,
   onToggleBot,
+  onOpenGuide,
 }) => {
   const getStatusBadge = () => {
     switch (status) {
@@ -156,6 +159,16 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-mono">{antiSleep.batteryLevel}%</span>
             </div>
           )}
+
+          {/* Guide / Cara Pakai Button */}
+          <button
+            onClick={onOpenGuide}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700/80 text-xs font-semibold transition-all active:scale-95"
+            title="Lihat cara pakai bot"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">Cara Pakai</span>
+          </button>
 
           {/* Toggle Bot Button */}
           <button

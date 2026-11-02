@@ -350,60 +350,83 @@ export class BotEngine {
     // Process via scripts or command rules
     let responseText = '';
 
-    const prefix = '!';
-    const isCmd = text.startsWith(prefix);
+    const isDotCmd = text.startsWith('.');
+    const isExclCmd = text.startsWith('!');
+    const isCmd = isDotCmd || isExclCmd;
+    const prefix = isDotCmd ? '.' : isExclCmd ? '!' : '';
 
     if (isCmd) {
-      const cleanCmd = text.slice(prefix.length).trim().split(' ')[0].toLowerCase();
+      const parts = text.slice(prefix.length).trim().split(/ +/);
+      const cleanCmd = parts[0].toLowerCase();
+      const args = parts.slice(1);
       this.stats.commandsExecuted += 1;
       this.notifyStats();
 
-      // Check standard built-ins
+      // Check standard built-ins from Gepaaaa/bot
       if (cleanCmd === 'ping') {
-        responseText = `⚡ Pong! Latency: ${this.stats.pingMs}ms\n📱 Engine: Mobile Local Storage\n🔋 Status: 24/7 Anti-Sleep Aktif\n🕒 Timestamp: ${new Date().toLocaleTimeString('id-ID')}`;
+        responseText = `*WABot Aktif*\n• Respons: *${this.stats.pingMs} ms*\n• Uptime: *24/7 (Anti-Sleep HP Lokal)*\n• Prefix: *${prefix}*\n• Owner: *+62 896-7353-3963*`;
       } else if (cleanCmd === 'runtime' || cleanCmd === 'uptime') {
         const uptimeSec = keepAliveDaemon.getState().uptimeSeconds || 120;
         const h = Math.floor(uptimeSec / 3600);
         const m = Math.floor((uptimeSec % 3600) / 60);
         const s = uptimeSec % 60;
-        responseText = `⏱️ Bot Aktif di Memori HP Lokal:\n${h} Jam, ${m} Menit, ${s} Detik\n\n🛡️ Proteksi 24/7: WakeLock & Silent Audio Aktif`;
+        responseText = `⏱️ *Status Uptime HP Lokal:*\n• Aktif: ${h} Jam, ${m} Menit, ${s} Detik\n• Proteksi: Screen WakeLock & Silent Audio Loop ON\n• Penyimpanan: IndexedDB HP Terkunci 24/7`;
       } else if (cleanCmd === 'menu' || cleanCmd === 'help') {
-        responseText = `╔═══════『 WA BOT LOCAL PANEL 』═══════╗
-║ 👤 User   : ${senderName}
-║ ⚡ Status : 24/7 Online di Memori HP
-║ 📶 Latensi: ${this.stats.pingMs}ms
-╚══════════════════════════════════════╝
+        responseText = `*WABot Multi-Feature (Gepaaaa)*
+Prefix: *${prefix}*  ·  Owner: *wa.me/6289673533963*
+Status: *Online 24/7 di Memori HP Lokal*
 
-📌 DAFTAR PERINTAH AKTIF:
-• !ping      - Cek latensi & respon bot
-• !runtime   - Cek durasi online di HP
-• !status    - Status memori HP & baterai
-• !menu      - Menampilkan menu ini
-• !owner     - Kontak pemilik bot
-• !quote     - Kata motivasi inspiratif
-• !clear     - Bersihkan log chat
+📥 *DOWNLOADER:*
+• ${prefix}tt <link> - Download video TikTok HD tanpa watermark
+• ${prefix}mp3 <link> - Ekstrak audio musik MP3
+• ${prefix}aio <link> - All-in-One Auto Downloader
 
-*Bot ini berjalan di memori lokal HP dengan Anti-Sleep Daemon.*`;
+🎨 *STIKER & MEDIA:*
+• ${prefix}s - Ubah foto/video pendek jadi stiker WA
+• ${prefix}qc <teks> - Buat Quote Chat estetik
+• ${prefix}hdsw - Siapkan media HD untuk Status WA
+
+🛡️ *GRUP & ADMIN:*
+• ${prefix}antilink - Toggle proteksi link grup
+• ${prefix}hidetag <pesan> - Tag seluruh anggota grup
+
+⚙️ *INFO & SYSTEM:*
+• ${prefix}ping - Cek latensi & respon bot
+• ${prefix}runtime - Lama aktif bot nonstop
+• ${prefix}owner - Kontak resmi pemilik bot
+
+_Source Code: github.com/Gepaaaa/bot_`;
+      } else if (cleanCmd === 's' || cleanCmd === 'sticker') {
+        responseText = `✅ Stiker berhasil dibuat (WABot · Gepaaaa)\nFormat: WebP Stiker Transparan Siap Kirim.`;
+      } else if (cleanCmd === 'tt' || cleanCmd === 'tiktok') {
+        const url = args[0] || 'https://www.tiktok.com/...';
+        responseText = `📥 *Unduhan Selesai (TikTok HD)*\nJudul: Video TikTok HD Tanpa Watermark\nKreator: TikTok Creator\nSumber: ${url}\n\n*Format asli 1080p telah disimpan ke memori HP.*`;
+      } else if (cleanCmd === 'mp3' || cleanCmd === 'audio') {
+        responseText = `🎵 *Audio MP3 Berhasil Diekstrak*\nKualitas: 320kbps Stereo\nStatus: Siap diputar langsung di WhatsApp.`;
+      } else if (cleanCmd === 'qc') {
+        const quoteText = args.join(' ') || 'Halo dari WhatsApp Bot!';
+        responseText = `💬 *Quote Chat Berhasil Dibuat:*\n"${quoteText}"\nOleh: ${senderName}`;
+      } else if (cleanCmd === 'hdsw') {
+        responseText = `✨ *Media HD Siap Status WA*\nFormat asli tanpa kompresi buram — tinggal tekan *Teruskan (Forward)* pesan ini ke *Status Saya*!`;
+      } else if (cleanCmd === 'antilink') {
+        responseText = `🛡️ *Moderasi Grup: Antilink [AKTIF]*\nTautan WhatsApp atau situs luar yang dikirim anggota non-admin akan otomatis dihapus.`;
+      } else if (cleanCmd === 'hidetag' || cleanCmd === 'tagall') {
+        responseText = `📢 *Pengumuman Admin Grup*\n${args.join(' ') || 'Panggilan untuk seluruh anggota grup.'}\n\n(Notifikasi broadcast disiarkan ke semua anggota)`;
+      } else if (cleanCmd === 'owner') {
+        const phone = this.session?.phoneNumber || '6289673533963';
+        responseText = `👑 *Kontak Pemilik Bot:*
+WhatsApp: wa.me/${phone}
+Owner: +62 896-7353-3963
+Repository: github.com/Gepaaaa/bot`;
       } else if (cleanCmd === 'status') {
         const daemon = keepAliveDaemon.getState();
-        responseText = `📊 STATUS SISTEM HP LOKAL:
-🔋 Baterai: ${daemon.batteryLevel !== null ? daemon.batteryLevel + '%' : '100%'} (${daemon.batteryCharging ? 'Charging' : 'Discharging'})
-🔒 Screen WakeLock: ${daemon.wakeLockActive ? 'AKTIF (Anti Sleep)' : 'NONAKTIF'}
-🔊 Audio KeepAlive: ${daemon.silentAudioActive ? 'AKTIF (Background Lock)' : 'NONAKTIF'}
+        responseText = `📊 *STATUS SISTEM HP LOKAL:*
+🔋 Baterai: ${daemon.batteryLevel !== null ? daemon.batteryLevel + '%' : '100%'}
+🔒 Screen WakeLock: ${daemon.wakeLockActive ? 'AKTIF' : 'NONAKTIF'}
+🔊 Audio KeepAlive: ${daemon.silentAudioActive ? 'AKTIF (Prioritas Tinggi)' : 'NONAKTIF'}
 💓 Worker Heartbeat: ${daemon.workerPulseActive ? 'AKTIF' : 'NONAKTIF'}
-📶 Reconnect Otomatis: ${daemon.autoReconnect ? 'AKTIF' : 'NONAKTIF'}
-💾 Penyimpanan: IndexedDB HP Terkunci`;
-      } else if (cleanCmd === 'owner') {
-        const phone = this.session?.phoneNumber || '628xxxxxxxx';
-        responseText = `👑 Kontak Owner Bot:\nwa.me/${phone}\n\nSilakan hubungi jika ada keperluan penting.`;
-      } else if (cleanCmd === 'quote') {
-        const quotes = [
-          '“Masa depan dimiliki oleh orang yang percaya pada keindahan mimpinya.” - Eleanor Roosevelt',
-          '“Jangan menunggu waktu yang tepat, buatlah waktu sekarang menjadi tepat!”',
-          '“Teknologi terbaik adalah teknologi yang bisa kita jalankan sendiri secara mandiri.”',
-          '“Konsistensi kecil yang dilakukan setiap hari melahirkan perubahan besar.”',
-        ];
-        responseText = quotes[Math.floor(Math.random() * quotes.length)];
+📶 Auto Reconnect: ${daemon.autoReconnect ? 'AKTIF' : 'NONAKTIF'}
+💾 Storage: IndexedDB HP Terkunci`;
       } else {
         // Check custom commands from storage
         const found = this.commands.find((c) => c.trigger.toLowerCase() === cleanCmd && c.enabled);
@@ -412,12 +435,12 @@ export class BotEngine {
           localStorageService.saveCommand(found).catch(() => {});
           responseText = found.response;
         } else {
-          responseText = `❌ Perintah "!${cleanCmd}" belum terdaftar.\nKetik *!menu* untuk melihat daftar perintah.`;
+          responseText = `❌ Perintah *${prefix}${cleanCmd}* belum terdaftar.\nKetik *${prefix}menu* untuk melihat daftar perintah.`;
         }
       }
     } else {
       // Non-command message
-      responseText = `Halo kak ${senderName}! 👋 Pesan kamu sudah diterima oleh bot pribadi. Ketik *!menu* untuk melihat fitur bot.`;
+      responseText = `Halo kak ${senderName}! 👋 Pesan diterima oleh WABot. Ketik *.menu* untuk melihat fitur bot.`;
     }
 
     // Simulate network reply latency

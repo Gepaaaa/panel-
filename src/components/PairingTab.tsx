@@ -33,7 +33,7 @@ export const PairingTab: React.FC<PairingTabProps> = ({
   onImportSession,
   onLogoutSession,
 }) => {
-  const [phoneNumber, setPhoneNumber] = useState('628');
+  const [phoneNumber, setPhoneNumber] = useState('6289673533963');
   const [generatedCode, setGeneratedCode] = useState(session?.pairingCode || '');
   const [countdown, setCountdown] = useState(60);
   const [isCopied, setIsCopied] = useState(false);
