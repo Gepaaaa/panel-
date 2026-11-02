@@ -119,35 +119,35 @@ export const TermuxTab: React.FC<TermuxTabProps> = ({ session }) => {
         </div>
       </div>
 
-      {/* Troubleshooting NDK / libc++ Error Box */}
-      <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-600/40 space-y-2.5">
+      {/* Troubleshooting Sharp / LightningCSS (Android 32-bit ARM) */}
+      <div className="p-4 rounded-2xl bg-cyan-950/40 border border-cyan-600/40 space-y-2.5">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-            <h4 className="text-xs font-bold text-amber-300">
-              Mengatasi Error: <code className="font-mono text-zinc-200 bg-zinc-950 px-1.5 py-0.5 rounded text-[11px]">CANNOT LINK EXECUTABLE "node"</code> &amp; <code className="font-mono text-zinc-200 bg-zinc-950 px-1.5 py-0.5 rounded text-[11px]">No command pm2 found</code>
+            <Zap className="w-4 h-4 text-cyan-400 shrink-0" />
+            <h4 className="text-xs font-bold text-cyan-300">
+              Mengatasi Error: <code className="font-mono text-zinc-200 bg-zinc-950 px-1.5 py-0.5 rounded text-[11px]">Could not load the "sharp" module using android-arm</code>
             </h4>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-900/60 text-amber-200 border border-amber-700/60 font-mono">
-            Solusi Termux HP
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-900/60 text-cyan-200 border border-cyan-700/60 font-mono">
+            Fix Android 32-Bit
           </span>
         </div>
         <p className="text-[11px] text-zinc-300 leading-relaxed">
-          Penyebab: Pustaka C++ (<code className="text-amber-300 font-mono">libc++</code>) di Termux kamu belum sinkron dengan versi Node.js yang baru diunduh. Salin perintah perbaikan di bawah ini dan tempel di Termux:
+          Penyebab: HP Android kamu berjalan di arsitektur ARM 32-bit yang membutuhkan library WebAssembly untuk pengolah gambar stiker. Cukup jalankan perintah ini di dalam folder <code className="text-cyan-300 font-mono">~/wabot</code>:
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <code className="flex-1 p-2.5 rounded-xl bg-zinc-950 text-xs font-mono text-emerald-300 border border-zinc-800 select-all overflow-x-auto whitespace-pre-wrap">
-            pkg update -y && pkg install -y libc++ && pkg upgrade -y && pkg install -y nodejs-lts git curl && npm install -g pm2
+          <code className="flex-1 p-2.5 rounded-xl bg-zinc-950 text-xs font-mono text-cyan-300 border border-zinc-800 select-all overflow-x-auto whitespace-pre-wrap">
+            mkdir -p dist && echo '&lt;html&gt;&lt;body&gt;WABot&lt;/body&gt;&lt;/html&gt;' &gt; dist/index.html && npm install @img/sharp-wasm32 && node index.js
           </code>
           <button
             onClick={() => {
-              navigator.clipboard.writeText("pkg update -y && pkg install -y libc++ && pkg upgrade -y && pkg install -y nodejs-lts git curl && npm install -g pm2");
+              navigator.clipboard.writeText("mkdir -p dist && echo '<html><body>WABot</body></html>' > dist/index.html && npm install @img/sharp-wasm32 && node index.js");
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
-            className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold whitespace-nowrap active:scale-95 transition-all shadow-md shadow-amber-800/20"
+            className="px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold whitespace-nowrap active:scale-95 transition-all shadow-md shadow-cyan-800/20"
           >
-            Salin Perintah Fix
+            Salin Perintah Fix Sharp
           </button>
         </div>
       </div>
