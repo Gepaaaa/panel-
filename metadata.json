@@ -1,0 +1,6 @@
+{
+  "name": "WAPanel Local - 24/7 WA Bot Mobile Host",
+  "description": "Panel bot WhatsApp pribadi berbasis penyimpanan lokal HP dengan auto pair code, 24/7 anti-sleep daemon, dan code runner tanpa server eksternal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
